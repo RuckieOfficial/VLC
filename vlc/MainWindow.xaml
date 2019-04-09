@@ -1,0 +1,18 @@
+﻿<Window x:Class="vlc.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:vlc"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Vlc:VlcControl xmlns:Vlc="clr-namespace:Vlc.DotNet.Wpf;assembly=Vlc.DotNet.Wpf" x:Name="MyControl" Margin="0,0,142,0" />
+        <StackPanel Margin="655,0,0,10">
+            <Button Content="Load" Click="lod" Height="44"></Button>
+            <Button Content="Play" Click="ply" Margin="0,10" Height="44"></Button>
+            <Button Content="Stop" Click="stp" Margin="0,10" Height="44"></Button>
+            <Button Content="Pause" Click="pse" Margin="0,10" Height="44"></Button>
+        </StackPanel>
+    </Grid>
+</Window>
