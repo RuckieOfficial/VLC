@@ -5,15 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:vlc"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="468" Width="800" Loaded="VideoLoad">
     <Grid>
-        <Vlc:VlcControl xmlns:Vlc="clr-namespace:Vlc.DotNet.Wpf;assembly=Vlc.DotNet.Wpf" x:Name="MyControl" Margin="0,0,142,0" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="792*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Vlc:VlcControl xmlns:Vlc="clr-namespace:Vlc.DotNet.Wpf;assembly=Vlc.DotNet.Wpf" x:Name="MyControl" Margin="0,0,142,27" />
         <StackPanel Margin="655,0,0,10">
             <Button Content="Load" Click="lod" Height="44"></Button>
             <Button Content="Play" Click="ply" Margin="0,10" Height="44"></Button>
             <Button Content="Stop" Click="stp" Margin="0,10" Height="44"></Button>
             <Button Content="Pause" Click="pse" Margin="0,10" Height="44"></Button>
         </StackPanel>
-        <Slider Name="trackBar1" Maximum="100" />
+        <Slider Name="trackBar1" Maximum="100" Margin="0,410,141,5" Foreground="Black" BorderBrush="Black"/>
+        <Label Name="label1" Content="TEST" Margin="655,329,26,53"/>
     </Grid>
 </Window>

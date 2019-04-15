@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using Vlc.DotNet.Core;
 
 namespace vlc {
@@ -23,56 +24,55 @@ namespace vlc {
     /// Interakční logika pro MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
+
         public int a = 0; 
         public int c = 0;
+        public double i;
+
+        DispatcherTimer timer = new DispatcherTimer();
+
         public MainWindow() {
             InitializeComponent();
+            mainFunction();
+        }
+
+        private void mainFunction() {
+            timer.Interval = new TimeSpan(0, 0, 0, 0, 500);
+            timer.Tick += new EventHandler(MyControl2_positionchanged);
+            timer.Start();
+
             var currentAssembly = Assembly.GetEntryAssembly();
             var currentDirectory = new FileInfo(currentAssembly.Location).DirectoryName;
-
             var vlcLibDirectory = new DirectoryInfo(System.IO.Path.Combine(currentDirectory, "libvlc", IntPtr.Size == 4 ? "win-x86" : "win-x64"));
-
-            var options = new string[]
-            {
-                // VLC options can be given here. Please refer to the VLC command line documentation.
-            };
-
+            var options = new string[] { };
             this.MyControl.SourceProvider.CreatePlayer(vlcLibDirectory, options);
-
-            // Load libvlc libraries and initializes stuff. It is important that the options (if you want to pass any) and lib directory are given before calling this method.
             this.MyControl.SourceProvider.MediaPlayer.Play("http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov");
-
-            //Event handler for 'current media time' label
             this.MyControl.SourceProvider.MediaPlayer.PositionChanged += new System.EventHandler<Vlc.DotNet.Core.VlcMediaPlayerPositionChangedEventArgs>(MyControl_positionchanged);
-            //Event handler for setting trackBar1.Maximum on media load
-            //MyControl.SourceProvider.MediaPlayer.Playing += new System.EventHandler<VlcMediaPlayerPlayingEventArgs>(SetProgresMax);
-    }
+
+            a = (int)this.MyControl.SourceProvider.MediaPlayer.Length;
+            //MessageBox.Show(a.ToString());
+        }
 
         private void MyControl_positionchanged(object sender, EventArgs e) {
-            zmenabaru();
-            //trackBar1.Value = pos;
+            i = Math.Round(MyControl.SourceProvider.MediaPlayer.Position * 1000, 0);
         }
 
-        void zmenabaru() {
-            trackBar1.Value = this.MyControl.SourceProvider.MediaPlayer.Position;
+        private void MyControl2_positionchanged(object sender, EventArgs e) {
+            trackBar1.Value = i;
         }
 
-        // This is the main function which you looking.
         private void trackBar1_Scroll(object sender, EventArgs e) {
-            //MyControl.SourceProvider.MediaPlayer.Time = trackBar1.Value * 1000;
             int b = (int)MyControl.SourceProvider.MediaPlayer.Time / 1000;
             int d = b / 60;
             b = b - d * 60;
             //label1.Text = d + ":" + b + "/" + c + ":" + a;
-            // The Time value is milisecond, you have divide 1000 for be second.
         }
 
-        private void formdeneme_Load(object sender, EventArgs e) {
-            a = (int)MyControl.SourceProvider.MediaPlayer.Length / 1000;
-            trackBar1.Maximum = a;
+        private void VideoLoad(object sender, EventArgs e) {
+            //trackBar1.Maximum = a;
             c = a / 60;
             a = a - c * 60;
-           // label1.Text = 0 + "/" + c + ":" + a;
+            label1.Content = 0 + "/" + c + ":" + a;
         }
 
 
