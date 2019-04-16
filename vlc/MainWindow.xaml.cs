@@ -25,7 +25,7 @@ namespace vlc {
     /// </summary>
     public partial class MainWindow : Window {
 
-        public int a = 0;
+        public int a;
         public int c = 0;
         public double i;
 
@@ -57,6 +57,7 @@ namespace vlc {
         }
 
         private void MyControl2_positionchanged(object sender, EventArgs e) {
+            label1.Content = i.ToString() + " / " + (a/1000).ToString();
             trackBar1.Value = i;
         }
 
