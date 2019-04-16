@@ -25,7 +25,7 @@ namespace vlc {
     /// </summary>
     public partial class MainWindow : Window {
 
-        public int a = 0; 
+        public int a = 0;
         public int c = 0;
         public double i;
 
@@ -41,24 +41,27 @@ namespace vlc {
             timer.Tick += new EventHandler(MyControl2_positionchanged);
             timer.Start();
 
-            var currentAssembly = Assembly.GetEntryAssembly();
-            var currentDirectory = new FileInfo(currentAssembly.Location).DirectoryName;
+            //var currentAssembly = Assembly.GetEntryAssembly();
+            var currentDirectory = Directory.GetCurrentDirectory();
             var vlcLibDirectory = new DirectoryInfo(System.IO.Path.Combine(currentDirectory, "libvlc", IntPtr.Size == 4 ? "win-x86" : "win-x64"));
             var options = new string[] { };
             this.MyControl.SourceProvider.CreatePlayer(vlcLibDirectory, options);
             this.MyControl.SourceProvider.MediaPlayer.Play("http://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_480p_h264.mov");
             this.MyControl.SourceProvider.MediaPlayer.PositionChanged += new System.EventHandler<Vlc.DotNet.Core.VlcMediaPlayerPositionChangedEventArgs>(MyControl_positionchanged);
-
-            a = (int)this.MyControl.SourceProvider.MediaPlayer.Length;
-            //MessageBox.Show(a.ToString());
+            this.MyControl.SourceProvider.MediaPlayer.LengthChanged += new System.EventHandler<Vlc.DotNet.Core.VlcMediaPlayerLengthChangedEventArgs>(MyControl_lengthchanged);
         }
 
         private void MyControl_positionchanged(object sender, EventArgs e) {
             i = Math.Round(MyControl.SourceProvider.MediaPlayer.Position * 1000, 0);
+            //trackBar1.Value = i;
         }
 
         private void MyControl2_positionchanged(object sender, EventArgs e) {
             trackBar1.Value = i;
+        }
+
+        private void MyControl_lengthchanged(object sender, EventArgs e) {
+            a = (int)this.MyControl.SourceProvider.MediaPlayer.Length;
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e) {
@@ -68,11 +71,8 @@ namespace vlc {
             //label1.Text = d + ":" + b + "/" + c + ":" + a;
         }
 
-        private void VideoLoad(object sender, EventArgs e) {
+        private void videoLoad() {
             //trackBar1.Maximum = a;
-            c = a / 60;
-            a = a - c * 60;
-            label1.Content = 0 + "/" + c + ":" + a;
         }
 
 
@@ -94,5 +94,11 @@ namespace vlc {
         private void pse(object sender, RoutedEventArgs e) {
             this.MyControl.SourceProvider.MediaPlayer.Pause();
         }
-}
+        private void tmbck(object sender, RoutedEventArgs e) {
+            this.MyControl.SourceProvider.MediaPlayer.Time -= 10 * 1000;
+        }
+        private void tmfrw(object sender, RoutedEventArgs e) {
+            this.MyControl.SourceProvider.MediaPlayer.Time += 10 * 1000;
+        }
+    }
 }
